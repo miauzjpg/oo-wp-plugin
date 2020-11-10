@@ -54,7 +54,10 @@ class AdminPageEstate
 	const PAGE_ESTATE_UNITS = 'units';
 
 	/**  */
-    const PAGE_ESTATE_ESTATES = 'Estates';
+    const PAGE_ESTATE_SIMILAR = 'Estates';
+
+    /**  */
+    const PAGE_ESTATE_IMMOBILIENDATEN = 'Immobiliendaten';
 
 	/** */
 	const PARAM_TAB = 'tab';
@@ -67,7 +70,8 @@ class AdminPageEstate
 		self::PAGE_ESTATE_LIST => AdminPageEstateList::class,
 		self::PAGE_ESTATE_DETAIL => AdminPageEstateDetail::class,
 		self::PAGE_ESTATE_UNITS => AdminPageEstateUnitList::class,
-		self::PAGE_ESTATE_ESTATES => AdminPageEstatesSimilar::class,
+		self::PAGE_ESTATE_SIMILAR => AdminPageEstatesSimilar::class,
+		self::PAGE_ESTATE_IMMOBILIENDATEN => AdminPageImmobiliendaten::class,
 	);
 
 	/** @var AdminPage */
@@ -86,7 +90,8 @@ class AdminPageEstate
 			self::PAGE_ESTATE_LIST => __('List Views', 'onoffice'),
 			self::PAGE_ESTATE_DETAIL => __('Detail View', 'onoffice'),
 			self::PAGE_ESTATE_UNITS => __('Unit Lists', 'onoffice'),
-			self::PAGE_ESTATE_ESTATES => __('Similar Estates', 'onoffice'),
+			self::PAGE_ESTATE_SIMILAR => __('Similar Estates', 'onoffice'),
+			self::PAGE_ESTATE_IMMOBILIENDATEN => __('Immobiliendaten', 'onoffice'),
 		);
 
 		parent::__construct($pageSlug);

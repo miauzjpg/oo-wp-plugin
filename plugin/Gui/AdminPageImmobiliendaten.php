@@ -71,7 +71,7 @@ use const ONOFFICE_PLUGIN_DIR;
  *
  */
 
-class AdminPageEstatesSimilar
+class AdminPageImmobiliendaten
     extends AdminPageAjax
 {
     /** */
@@ -90,6 +90,9 @@ class AdminPageEstatesSimilar
     const FORM_VIEW_SIMILAR_ESTATES = 'viewsimilarestates';
 
     /** */
+    const FORM_VIEW_IMMOBILIENDATEN_ESTATES = 'Immobiliendaten';
+
+    /** */
     const FORM_VIEW_CONTACT_DATA_FIELDS = 'viewcontactdatafields';
 
     /** */
@@ -102,9 +105,6 @@ class AdminPageEstatesSimilar
     public function renderContent()
     {
         do_action('add_meta_boxes', get_current_screen()->id, null);
-        $this->generateMetaBoxes();
-
-        $pFieldsCollection = $this->readAllFields();
 
         /* @var $pRenderer InputModelRenderer */
         $pRenderer = $this->getContainer()->get(InputModelRenderer::class);
@@ -124,23 +124,6 @@ class AdminPageEstatesSimilar
         echo '<div id="post-body" class="metabox-holder columns-'
             .(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
 
-        echo '<div class="postbox-container" id="postbox-container-2">';
-        do_meta_boxes(get_current_screen()->id, 'side', null );
-        do_meta_boxes(get_current_screen()->id, 'advanced', null );
-        echo '</div>';
-
-        echo '<div class="clear"></div>';
-        do_action('add_meta_boxes', get_current_screen()->id, null);
-        echo '<div style="float:left;">';
-        $this->generateAccordionBoxesContactPerson($pFieldsCollection);
-        echo '</div>';
-
-        echo '<div class="clear"></div>';
-        do_action('add_meta_boxes', get_current_screen()->id, null);
-        echo '<div style="float:left;">';
-        $this->generateAccordionBoxes($pFieldsCollection);
-        echo '</div>';
-
 
 
         echo '<div class="fieldsSortable postbox" id="'
@@ -148,15 +131,6 @@ class AdminPageEstatesSimilar
         echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice').'</span></h2>';
         $pRenderer->buildForAjax($pFormViewSortableFields);
         echo '</div>';
-
-
-
-        echo '<div class="clear"></div>';
-        echo '</div>';
-        echo '</div>';
-
-        do_settings_sections($this->getPageSlug());
-        submit_button(null, 'primary', 'send_ajax');
 
         echo '<script>'
             .'jQuery(document).ready(function(){'
@@ -177,58 +151,9 @@ class AdminPageEstatesSimilar
     {
         echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
         echo ' › '.esc_html__($subTitle, 'onoffice');
-        echo ' › '.esc_html__('Similar Estates', 'onoffice');
+        echo ' › '.esc_html__('Immobiliendaten', 'onoffice');
         echo '</h1>';
         echo '<hr class="wp-header-end">';
-    }
-
-
-    /**
-     *
-     */
-
-    private function generateMetaBoxes()
-    {
-        $pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
-        $this->createMetaBoxByForm($pFormSimilarEstates, 'side');
-
-        $pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-        $this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
-
-        $pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-        $this->createMetaBoxByForm($pFormPictureTypes, 'normal');
-    }
-
-    /**
-     * @param FieldsCollection $pFieldsCollection
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    protected function generateAccordionBoxes(FieldsCollection $pFieldsCollection)
-    {
-        $pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
-        $fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
-
-        foreach (array_keys($fieldsEstate) as $category) {
-            $pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ESTATE.$category);
-            $this->createMetaBoxByForm($pFormFieldsConfig, 'advanced');
-        }
-    }
-
-    /**
-     * @param FieldsCollection $pFieldsCollection
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    protected function generateAccordionBoxesContactPerson(FieldsCollection $pFieldsCollection)
-    {
-        $pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
-        $fieldNamesContactData = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
-
-        foreach (array_keys($fieldNamesContactData) as $category) {
-            $pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ADDRESS.$category);
-            $this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
-        }
     }
 
     /**
